@@ -1,7 +1,6 @@
 import 'package:flutter_assessment/models/flights.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../main.dart';
 import '../providers/flights_provider.dart';
 
@@ -65,15 +64,6 @@ class _AirlinesState extends State<Airlines> {
           SizedBox(height: 16),
           Text('Loading...', style: TextStyle(fontSize: 18)),
         ],
-      ),
-    );
-  }
-
-  Widget errorScreen(String error) {
-    return Center(
-      child: Text(
-        error,
-        style: TextStyle(color: Colors.red, fontSize: 18),
       ),
     );
   }

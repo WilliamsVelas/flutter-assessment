@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_assessment/main.dart';
 import 'package:flutter_assessment/models/flights.dart';
 import 'package:flutter_assessment/providers/flights_provider.dart';
+import 'package:flutter_assessment/screens/flights_details_screens.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
@@ -65,15 +67,6 @@ class _FlightsState extends State<Flights> {
           const SizedBox(height: 16),
           const Text('Loading...', style: TextStyle(fontSize: 18)),
         ],
-      ),
-    );
-  }
-
-  Widget errorScreen(String error) {
-    return Center(
-      child: Text(
-        error,
-        style: const TextStyle(color: Colors.red, fontSize: 18),
       ),
     );
   }
@@ -167,7 +160,17 @@ class _FlightsState extends State<Flights> {
                 color: colorScheme.onSurfaceVariant,
               ),
             ),
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => FlightDetails(
+                    itinerary: itinerary,
+                    legs: itineraryLegs,
+                  ),
+                ),
+              );
+            },
           ),
         );
       },

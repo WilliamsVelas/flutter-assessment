@@ -3,6 +3,7 @@ import 'package:flutter_assessment/providers/flights_provider.dart';
 import 'package:flutter_assessment/screens/airlines_screen.dart';
 import 'package:flutter_assessment/screens/flights_screen.dart';
 import 'package:provider/provider.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -81,3 +82,12 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
+  Widget errorScreen(String error) {
+    return Center(
+      child: Text(
+        error,
+        style: const TextStyle(color: Colors.red, fontSize: 18),
+      ),
+    );
+  }
