@@ -19,13 +19,19 @@ class Flights {
   });
 
   factory Flights.fromJson(Map<String, dynamic> json) => Flights(
-    itineraries: List<Itinerary>.from(json["itineraries"].map((x) => Itinerary.fromJson(x))),
-    legs: List<Leg>.from(json["legs"].map((x) => Leg.fromJson(x))),
+    itineraries: (json["itineraries"] as List<dynamic>?)
+        ?.map((x) => Itinerary.fromJson(x))
+        .toList() ??
+        [],
+    legs: (json["legs"] as List<dynamic>?)
+        ?.map((x) => Leg.fromJson(x))
+        .toList() ??
+        [],
   );
 
   Map<String, dynamic> toJson() => {
-    "itineraries": List<dynamic>.from(itineraries.map((x) => x.toJson())),
-    "legs": List<dynamic>.from(legs.map((x) => x.toJson())),
+    "itineraries": itineraries.map((x) => x.toJson()).toList(),
+    "legs": legs.map((x) => x.toJson()).toList(),
   };
 }
 
@@ -45,16 +51,19 @@ class Itinerary {
   });
 
   factory Itinerary.fromJson(Map<String, dynamic> json) => Itinerary(
-    id: json["id"],
-    legs: List<String>.from(json["legs"].map((x) => x)),
-    price: json["price"],
-    agent: json["agent"],
-    agentRating: json["agent_rating"]?.toDouble(),
+    id: json["id"] ?? '',
+    legs: (json["legs"] as List<dynamic>?)
+        ?.map((x) => x as String)
+        .toList() ??
+        [],
+    price: json["price"] ?? 'N/A',
+    agent: json["agent"] ?? 'Unknown',
+    agentRating: (json["agent_rating"] as num?)?.toDouble() ?? 0.0,
   );
 
   Map<String, dynamic> toJson() => {
     "id": id,
-    "legs": List<dynamic>.from(legs.map((x) => x)),
+    "legs": legs,
     "price": price,
     "agent": agent,
     "agent_rating": agentRating,
@@ -85,15 +94,15 @@ class Leg {
   });
 
   factory Leg.fromJson(Map<String, dynamic> json) => Leg(
-    id: json["id"],
-    departureAirport: json["departure_airport"],
-    arrivalAirport: json["arrival_airport"],
-    departureTime: json["departure_time"],
-    arrivalTime: json["arrival_time"],
-    stops: json["stops"],
-    airlineName: json["airline_name"],
-    airlineId: json["airline_id"],
-    durationMins: json["duration_mins"],
+    id: json["id"] ?? '',
+    departureAirport: json["departure_airport"] ?? 'Unknown',
+    arrivalAirport: json["arrival_airport"] ?? 'Unknown',
+    departureTime: json["departure_time"] ?? '',
+    arrivalTime: json["arrival_time"] ?? '',
+    stops: json["stops"] ?? 0,
+    airlineName: json["airline_name"] ?? 'Unknown',
+    airlineId: json["airline_id"] ?? '',
+    durationMins: json["duration_mins"] ?? 0,
   );
 
   Map<String, dynamic> toJson() => {

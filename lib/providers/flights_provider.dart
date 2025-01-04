@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter_assessment/database/database_services.dart';
 import 'package:flutter_assessment/models/flights.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
@@ -14,16 +15,21 @@ class FlightsProvider extends ChangeNotifier {
   Flights flights = Flights(itineraries: [], legs: []);
 
   getDataFromApi() async {
+    final dbHelper = DatabaseService.instance;
     try {
       Response response = await http.get(Uri.parse(apiEndpoint));
       if (response.statusCode == 200) {
         flights = flightsFromJson(response.body);
 
+        await dbHelper.clearDatabase();
+
+        await dbHelper.insertItinerariesAndLegs(flights);
       } else {
         error = response.statusCode.toString();
       }
     } catch (e) {
-      error = e.toString();
+      error = '';
+      flights = await dbHelper.fetchItinerariesWithLegs();
     } finally {
       isLoading = false;
       notifyListeners();
