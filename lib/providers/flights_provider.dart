@@ -18,14 +18,13 @@ class FlightsProvider extends ChangeNotifier {
     final dbHelper = DatabaseService.instance;
     try {
       Response response = await http.get(Uri.parse(apiEndpoint));
+
       if (response.statusCode == 200) {
         flights = flightsFromJson(response.body);
 
         await dbHelper.clearDatabase();
 
         await dbHelper.insertItinerariesAndLegs(flights);
-      } else {
-        error = response.statusCode.toString();
       }
     } catch (e) {
       error = '';

@@ -56,8 +56,8 @@ class Itinerary {
         ?.map((x) => x as String)
         .toList() ??
         [],
-    price: json["price"] ?? 'N/A',
-    agent: json["agent"] ?? 'Unknown',
+    price: json["price"],
+    agent: json["agent"],
     agentRating: (json["agent_rating"] as num?)?.toDouble() ?? 0.0,
   );
 
@@ -94,16 +94,29 @@ class Leg {
   });
 
   factory Leg.fromJson(Map<String, dynamic> json) => Leg(
-    id: json["id"] ?? '',
-    departureAirport: json["departure_airport"] ?? 'Unknown',
-    arrivalAirport: json["arrival_airport"] ?? 'Unknown',
-    departureTime: json["departure_time"] ?? '',
-    arrivalTime: json["arrival_time"] ?? '',
-    stops: json["stops"] ?? 0,
-    airlineName: json["airline_name"] ?? 'Unknown',
-    airlineId: json["airline_id"] ?? '',
-    durationMins: json["duration_mins"] ?? 0,
+    id: json["id"],
+    departureAirport: json["departure_airport"],
+    arrivalAirport: json["arrival_airport"],
+    departureTime: json["departure_time"],
+    arrivalTime: json["arrival_time"],
+    stops: json["stops"],
+    airlineName: json["airline_name"],
+    airlineId: json["airline_id"],
+    durationMins: json["duration_mins"],
   );
+
+  factory Leg.fromJsonDB(Map<String, dynamic> json) => Leg(
+    id: json["id"],
+    departureAirport: json["departureAirport"],  // Cambio a la clave correcta
+    arrivalAirport: json["arrivalAirport"],      // Cambio a la clave correcta
+    departureTime: json["departureTime"],        // Cambio a la clave correcta
+    arrivalTime: json["arrivalTime"],            // Cambio a la clave correcta
+    stops: json["stops"],
+    airlineName: json["airlineName"],            // Cambio a la clave correcta
+    airlineId: json["airlineId"],                // Cambio a la clave correcta
+    durationMins: json["durationMins"],
+  );
+
 
   Map<String, dynamic> toJson() => {
     "id": id,

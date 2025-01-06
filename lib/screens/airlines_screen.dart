@@ -11,6 +11,8 @@ class Airlines extends StatefulWidget {
 
 class _AirlinesState extends State<Airlines> {
   String selectedAirline = 'All';
+  int selectedLegCount = 0;
+
 
   void initState() {
     final provider = Provider.of<FlightsProvider>(context, listen: false);
@@ -45,7 +47,7 @@ class _AirlinesState extends State<Airlines> {
                     children: [
                       filterSection(provider),
                       Expanded(
-                        child: airlinesListScreen(provider.flights.legs),
+                        child: airlinesListScreen(provider.flights.itineraries,provider.flights.legs),
                       )
                     ],
                   ));
@@ -69,35 +71,27 @@ class _AirlinesState extends State<Airlines> {
   }
 
   Widget filterSection(FlightsProvider provider) {
-    final airlines = [
-      'All',
-      ...provider.flights.legs.map((legs) => legs.airlineName).toSet()
-    ];
-
     return Padding(
-      padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 10, bottom: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
       child: Column(
         children: [
           Row(
             children: [
               Expanded(
-                child: DropdownButton<String>(
-                  isExpanded: true,
-                  value: selectedAirline,
+                child: TextField(
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(
+                    labelText: 'Number of Legs',
+                    border: OutlineInputBorder(),
+                  ),
                   onChanged: (value) {
                     setState(() {
-                      selectedAirline = value!;
+                      // Convertir el valor ingresado a un número entero
+                      selectedLegCount = int.tryParse(value) ?? 0;
                     });
                   },
-                  items: airlines
-                      .map((airline) => DropdownMenuItem(
-                            value: airline,
-                            child: Text(airline),
-                          ))
-                      .toList(),
                 ),
               ),
-              const SizedBox(width: 16),
             ],
           ),
         ],
@@ -105,51 +99,51 @@ class _AirlinesState extends State<Airlines> {
     );
   }
 
-  Widget airlinesListScreen(List<Leg> legs) {
+
+  Widget airlinesListScreen(List<Itinerary> itineraries, List<Leg> legs) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    final filteredAirlines = legs.where((legs) {
-      final isAirlineValid =
-          selectedAirline == 'All' || legs.airlineName == selectedAirline;
-      return isAirlineValid;
+    final airlineLegCounts = <String, int>{};
+
+    for (final itinerary in itineraries) {
+      final airline = itinerary.agent;
+      final legCount = itinerary.legs.length;
+
+      airlineLegCounts[airline] = (airlineLegCounts[airline] ?? 0) + legCount;
+    }
+
+    final filteredAirlines = airlineLegCounts.entries.where((entry) {
+      return selectedLegCount == 0 || entry.value == selectedLegCount;
     }).toList();
 
     return ListView.builder(
       itemCount: filteredAirlines.length,
       itemBuilder: (context, index) {
-        final leg = filteredAirlines[index];
+        final airline = filteredAirlines[index];
 
         return Card(
           color: colorScheme.surface,
           margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: ListTile(
             title: Text(
-              'Airline: ${leg.airlineName}',
+              airline.key,
               style: TextStyle(
                 color: colorScheme.onSurface,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Departure: ${leg.departureAirport}',
-                  style: TextStyle(
-                    color: colorScheme.onSurface,
-                  ),
-                ),
-              ],
+            subtitle: Text(
+              '${airline.value} Legs',
+              style: TextStyle(
+                color: colorScheme.onSurfaceVariant,
+              ),
             ),
-            trailing: Text('${leg.stops} Stops', style: TextStyle(
-              color: colorScheme.inversePrimary,
-              fontWeight: FontWeight.bold,
-              fontSize: 14.0,
-            ),),
-            onTap: () {},
           ),
         );
       },
     );
   }
+
+
+
 }

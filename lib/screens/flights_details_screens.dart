@@ -115,13 +115,15 @@ class AgentInfoRow extends StatelessWidget {
 
   final Itinerary itinerary;
 
+
+
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          'Agent: ${itinerary.agent}',
+          itinerary.agent,
           style: const TextStyle(fontSize: 18),
         ),
         const SizedBox(width: 8),
